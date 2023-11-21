@@ -1,0 +1,76 @@
+-- CreateTable
+CREATE TABLE `Audiobooks` (
+    `AudiobookID` INTEGER NOT NULL AUTO_INCREMENT,
+    `Title` VARCHAR(191) NULL,
+    `Author` VARCHAR(191) NULL,
+    `Narrator` VARCHAR(191) NULL,
+    `Duration` INTEGER NULL,
+    `CoverImage` VARCHAR(191) NULL,
+    `Description` VARCHAR(191) NULL,
+    `Path` VARCHAR(191) NULL,
+    `CreatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `UpdatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`AudiobookID`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Users` (
+    `UserID` INTEGER NOT NULL AUTO_INCREMENT,
+    `Username` VARCHAR(191) NULL,
+    `Password` VARCHAR(191) NULL,
+    `Email` VARCHAR(191) NOT NULL,
+    `CreatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `UpdatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    UNIQUE INDEX `Users_Email_key`(`Email`),
+    PRIMARY KEY (`UserID`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Audiobookslogs` (
+    `AudiobookLogID` INTEGER NOT NULL AUTO_INCREMENT,
+    `AudiobookID` INTEGER NOT NULL,
+    `UserID` INTEGER NOT NULL,
+    `CreatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`AudiobookLogID`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Favorites` (
+    `FavoriteID` INTEGER NOT NULL AUTO_INCREMENT,
+    `UserID` INTEGER NOT NULL,
+    `AudiobookID` INTEGER NOT NULL,
+    `status` BOOLEAN NOT NULL DEFAULT true,
+    `CreatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `UpdatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`FavoriteID`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Loginlogs` (
+    `LoginLogsID` INTEGER NOT NULL AUTO_INCREMENT,
+    `UserID` INTEGER NOT NULL,
+    `DeviceInfo` VARCHAR(191) NULL,
+    `IPAddress` VARCHAR(191) NULL,
+    `CreatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`LoginLogsID`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Audiobookslogs` ADD CONSTRAINT `Audiobookslogs_AudiobookID_fkey` FOREIGN KEY (`AudiobookID`) REFERENCES `Audiobooks`(`AudiobookID`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Audiobookslogs` ADD CONSTRAINT `Audiobookslogs_UserID_fkey` FOREIGN KEY (`UserID`) REFERENCES `Users`(`UserID`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Favorites` ADD CONSTRAINT `Favorites_UserID_fkey` FOREIGN KEY (`UserID`) REFERENCES `Users`(`UserID`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Favorites` ADD CONSTRAINT `Favorites_AudiobookID_fkey` FOREIGN KEY (`AudiobookID`) REFERENCES `Audiobooks`(`AudiobookID`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Loginlogs` ADD CONSTRAINT `Loginlogs_UserID_fkey` FOREIGN KEY (`UserID`) REFERENCES `Users`(`UserID`) ON DELETE RESTRICT ON UPDATE CASCADE;

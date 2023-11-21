@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Audiobooks {
+    AudiobookID Int @default(autoincrement()) @id
+    Title String?
+    Author String?
+    Narrator String?
+    Duration Int?
+    CoverImage String?
+    Description String?
+    Path String?
+    CreatedAt DateTime @default(now())
+    UpdatedAt DateTime @default(now())
+    Audiobookslogs Audiobookslogs[]
+    Favorites Favorites[]
+}
+
+model Users {
+    UserID Int @default(autoincrement()) @id
+    Username String?
+    Password String?
+    Email String @unique
+    CreatedAt DateTime @default(now())
+    UpdatedAt DateTime @default(now())
+    Favorites Favorites[]
+    Loginlogs Loginlogs[]
+    Audiobookslogs Audiobookslogs[]
+}
+
+model Audiobookslogs {
+    AudiobookLogID Int @default(autoincrement()) @id
+    Audiobook Audiobooks @relation(fields: [AudiobookID], references: [AudiobookID])
+    AudiobookID Int
+    User Users @relation(fields: [UserID], references: [UserID])
+    UserID Int
+    CreatedAt DateTime @default(now())
+}
+
+model Favorites {
+    FavoriteID Int @default(autoincrement()) @id
+    User Users @relation(fields: [UserID], references: [UserID])
+    UserID Int
+    Audiobook Audiobooks @relation(fields: [AudiobookID], references: [AudiobookID])
+    AudiobookID Int
+    status Boolean @default(true)
+    CreatedAt DateTime @default(now())
+    UpdatedAt DateTime @default(now())
+}
+
+model Loginlogs {
+    LoginLogsID Int @default(autoincrement()) @id
+    User Users @relation(fields: [UserID], references: [UserID])
+    UserID Int
+    DeviceInfo String?
+    IPAddress String?
+    CreatedAt DateTime @default(now())
+}
+
